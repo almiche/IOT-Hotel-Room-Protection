@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <title>EXAMPLE</title>
+    </head>
+    <style>
+        .bob{
+            width:100px;
+            height:100px;
+            visibility:visible;
+            position:relative;
+
+        }
+
+    </style>
+   <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            function bobDirection(location){
+                if(location == "No"){
+                $("body").append( "<p>"+ location + " " + new Date($.now()) + "</p>");
+                }
+            }
+
+            setInterval(function(){ 
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == XMLHttpRequest.DONE) {
+                        bobDirection(xhr.responseText);
+                    }
+                }
+                xhr.open('GET', 'http://bobbytasker.herokuapp.com//api/v0.1/alarm/status', true);
+                xhr.send(null); 
+             }, 30);
+        });
+
+    </script>
+    <body>
+    </body>
+
+
+
+</html>
