@@ -7,7 +7,7 @@ const char* ssid     = "raffy1968";
 const char* password = "raffy2011";
 int sensitivity = 0;
 int start = 0;
-const String HOST = "bobbytasker.herokuapp.com";
+const String HOST = "hotelroom-iot-mike.herokuapp.com";
 ESP8266WiFiMulti WiFiMulti;
 
 
@@ -25,6 +25,7 @@ void loop (){
   if((WiFiMulti.run() == WL_CONNECTED)) {
     int offset = currentMotion - start;
     Serial.prinln(currentMotion + " - " + start + " = " + offset);
+    //Temporarily in comments for testing purposes
 //    if( offset > sensitivity){
 //          getRequest(HOST,"/api/v0.1/alarm/status","location=bedroom");
 //        }
