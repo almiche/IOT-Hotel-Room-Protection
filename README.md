@@ -21,5 +21,6 @@ I have started designing the 3d component and will be posting regular updates of
 ### February 22nd 2018 New design
 
 | ![alt text](https://github.com/almiche/IOT-Hotel-Room-Protection/blob/master/3dRender_1.PNG?raw=true)  |![alt text](https://github.com/almiche/IOT-Hotel-Room-Protection/blob/master/Capture.PNG?raw=true) |
+|---|---|
 
 ### Famingo Labs 2018
