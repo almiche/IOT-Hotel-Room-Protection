@@ -21,7 +21,7 @@ class MyApp < Sinatra::Application
     end
 
     get '/api/v1.0/configuration/sensitivity' do 
-        if(@@sensitivity == 0)
+        if(params[:sensitivity] != 0)
             @@sensitivity = params[:sensitivity].to_i
         end
         @@sensitivity.to_s
