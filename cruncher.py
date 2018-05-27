@@ -34,11 +34,12 @@ def thresholding_algo(y, lag, threshold, influence):
 
 if __name__ == "__main__":
     # Port should be passed in as a config
-    ser = serial.Serial("/dev/cu.wchusbserial14510", 115200, timeout=1)
     db = []
-    lag = 15 # How far behind will the moving average lag, larger the better
+    lag = 50 # How far behind will the moving average lag, larger the better
     threshold = 3.5 # Number of standard deviations away from the moving average will cause a trigger
     influence = 1 # Influence of new point
+    timeout = 1 # Read frequency on the serial connection
+    ser = serial.Serial("/dev/cu.wchusbserial14510", 115200, timeout = 1)
     while True:
         read_out = 0
         try:
@@ -49,11 +50,12 @@ if __name__ == "__main__":
         print("Point is currently %s and list is currently at %s" % (read_out,len(db)))
         if len(db) > lag:
             result = (thresholding_algo(db,lag,threshold,influence))['signals']
-            if(result[-1] == 1):
+            if(abs(result[-1]) == 1):
+                # dump last minute of data to server
                 print("Spike!")
             pass
         else:
             print("herer")
             print(db)
-   
-
+        if(len(db)%(60/timeout) == 1): # Dump data to mysqlite
+            print("Database is currently at %s a dump is necessary" % len(db))
