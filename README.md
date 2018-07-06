@@ -1,5 +1,6 @@
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/mashape/kong.svg?style=for-the-badge)](https://hub.docker.com/r/almiche/iot_hotel/)
+![Docker Pulls](https://img.shields.io/docker/pulls/mashape/kong.svg?style=for-the-badge)  
+[![Docker Hub repository](http://dockeri.co/image/almiche/iot_hotel)](https://registry.hub.docker.com/u/almiche/iot_hotel/)
 
 # IOT-Hotel-Room-Protection
 ESP8266 based project for securing hotel rooms
