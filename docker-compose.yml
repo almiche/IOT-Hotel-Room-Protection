@@ -10,9 +10,11 @@ services:
     networks:
       myvlan:
           ipv4_address: 10.10.10.15
-  door_hanger2:
-    build: .
-    image: nouchka/sqlite3:latest
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
     restart: always
     privileged: true
     networks:
