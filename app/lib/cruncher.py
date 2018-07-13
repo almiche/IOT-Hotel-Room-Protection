@@ -2,7 +2,6 @@ import os
 import sys
 import serial
 import os
-import sqlite3
 import numpy as np
 import time
 
@@ -33,16 +32,15 @@ def thresholding_algo(y, lag, threshold, influence):
                 avgFilter = np.asarray(avgFilter),
                 stdFilter = np.asarray(stdFilter))
 
-if __name__ == "__main__":
-    # Port should be passed in as a config
-    db = []
-    lag = 50 # How far behind will the moving average lag, larger the better
-    threshold = 3.5 # Number of standard deviations away from the moving average will cause a trigger
-    influence = 1 # Influence of new point
-    timeout = 1 # Read frequency on the serial connection
-    ser = serial.Serial("/dev/cu.wchusbserial14510", 115200, timeout = 1)
-    spike_flag = False
-    nth_point = 0 # Tracks which collection point we're at since list db is being dumped every few minutes
+
+def ingress(    db = [],
+                lag = 50, # How far behind will the moving average lag, larger the better
+                threshold = 3.5, # Number of standard deviations away from the moving average will cause a trigger
+                influence = 1, # Influence of new point
+                timeout = 1, # Read frequency on the serial connection
+                ser = serial.Serial("/dev/tty0", 115200, timeout = 1),
+                spike_flag = False,
+                nth_point = 0 ):
     while True:
         read_out = 0
 
@@ -80,3 +78,14 @@ if __name__ == "__main__":
                 }
             # TODO: Dump data here
             db = temp_lag_storage
+
+if __name__ == "__main__":
+    # Port should be passed in as a config
+    db = []
+    lag = 50 # How far behind will the moving average lag, larger the better
+    threshold = 3.5 # Number of standard deviations away from the moving average will cause a trigger
+    influence = 1 # Influence of new point
+    timeout = 1 # Read frequency on the serial connection
+    ser = serial.Serial("/dev/cu.wchusbserial14510", 115200, timeout = 1)
+    spike_flag = False
+    nth_point = 0 # Tracks which collection point we're at since list db is being dumped every few minutes

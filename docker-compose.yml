@@ -1,0 +1,29 @@
+version: "3"
+services:
+  door_hanger:
+    build: .
+    image: iot_hotel:0.2
+    volumes:
+      - ~/workspace/IOT-Hotel-Room-Protection:/usr/iot_door
+    restart: always
+    privileged: true
+    networks:
+      myvlan:
+          ipv4_address: 10.10.10.15
+  door_hanger2:
+    build: .
+    image: nouchka/sqlite3:latest
+    restart: always
+    privileged: true
+    networks:
+      myvlan:
+          ipv4_address: 10.10.10.16
+    
+networks:
+  myvlan:
+    driver: macvlan
+    driver_opts:
+      parent: enp3s0
+    ipam:
+      config:
+        - subnet: 10.10.10.0/24

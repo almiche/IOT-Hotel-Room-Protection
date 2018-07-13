@@ -6,11 +6,11 @@ name = "pypi"
 [dev-packages]
 pylint = "*"
 "autopep8" = "*"
+rope = "*"
 
 [packages]
-"psycopg2" = "*"
 pyserial = "*"
-numpy = "*"
+flask = "*"
 
 [requires]
-python_version = "3.6.5"
+python_version = "3.6.4"

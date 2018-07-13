@@ -1,19 +1,23 @@
-FROM ubuntu
+FROM alpine:3.8
 
-RUN apt-get update &&\
-    apt-get -y install --no-install-recommends  python3 &&\
-    apt-get -y install python3-pip git &&\
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
-RUN pip3 install pipenv
-RUN mkdir -p /usr/iot_door
-WORKDIR /usr/iot_door
-RUN git clone https://github.com/almiche/IOT-Hotel-Room-Protection.git .
-RUN locale
-RUN pipenv lock
-RUN set -ex && pipenv install --deploy --system
-RUN apt-get -y remove git python3-pip
-RUN apt-get clean
+ENV LANG C.UTF-8
 
-CMD "echo Hello world!"
+WORKDIR /usr/iot_door/app
+COPY Pipfile .
+COPY Pipfile.lock .
+
+ADD repositories /etc/apk/repositories
+
+RUN apk add --update python python-dev gfortran py-pip build-base py-numpy@community python3 &&\
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* &&\
+    pip3 install --no-cache-dir --upgrade pip &&\
+    which python3 && python3 --version &&\
+    pip3 install pipenv &&\
+    pipenv lock &&\
+    set -ex && pipenv --python /usr/bin/python3 install --deploy --system  &&\
+    rm -rf /var/cache/* &&\
+    rm -rf /root/.cache/*
+
+
+CMD ["python3","controller.py"]
