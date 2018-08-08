@@ -11,6 +11,8 @@ rope = "*"
 [packages]
 pyserial = "*"
 flask = "*"
+flask-socketio = "*"
+socketio-client = "*"
 
 [requires]
-python_version = "3.6.4"
+python_version = "3.6.5"

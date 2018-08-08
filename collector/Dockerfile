@@ -3,9 +3,12 @@ FROM alpine:3.8
 ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
 
-WORKDIR /usr/iot_door/app
+
+COPY . /usr/iot_door
 COPY Pipfile .
 COPY Pipfile.lock .
+
+WORKDIR /usr/iot_door/app
 
 ADD repositories /etc/apk/repositories
 

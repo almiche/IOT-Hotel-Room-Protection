@@ -4,6 +4,7 @@ import serial
 import os
 import numpy as np
 import time
+import requests
 
 def thresholding_algo(y, lag, threshold, influence):
     signals = np.zeros(len(y))
@@ -33,14 +34,15 @@ def thresholding_algo(y, lag, threshold, influence):
                 stdFilter = np.asarray(stdFilter))
 
 
-def ingress(    db = [],
-                lag = 50, # How far behind will the moving average lag, larger the better
-                threshold = 3.5, # Number of standard deviations away from the moving average will cause a trigger
-                influence = 1, # Influence of new point
-                timeout = 1, # Read frequency on the serial connection
-                ser = serial.Serial("/dev/tty0", 115200, timeout = 1),
-                spike_flag = False,
-                nth_point = 0 ):
+def ingress(    db ,
+                lag, # How far behind will the moving average lag, larger the better
+                threshold, # Number of standard deviations away from the moving average will cause a trigger
+                influence, # Influence of new point
+                timeout, # Read frequency on the serial connection
+                ser,
+                spike_flag ,
+                nth_point,
+                name):
     while True:
         read_out = 0
 
@@ -77,6 +79,10 @@ def ingress(    db = [],
                     'raw_signals':db
                 }
             # TODO: Dump data here
+            r = requests.post("https://142.93.49.175/ingress", data={
+                                                                    'id':name,
+                                                                    'data':db
+                                                                    })
             db = temp_lag_storage
 
 if __name__ == "__main__":
