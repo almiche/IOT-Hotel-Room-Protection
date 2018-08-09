@@ -1,9 +1,11 @@
 FROM alpine:3.8
+COPY ./qemu-arm-static /usr/bin/qemu-arm-static
 
 ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
+ENV TTY /dev/ttyUSB0
 
-WORKDIR /usr/iot_door/app
+WORKDIR /usr/iot_door/collector
 COPY Pipfile .
 COPY Pipfile.lock .
 
@@ -20,4 +22,4 @@ RUN apk add --update python python-dev gfortran py-pip build-base py-numpy@commu
     rm -rf /root/.cache/*
 
 
-CMD ["python3","controller.py"]
+CMD ["python3","controller.py",${TTY}]
