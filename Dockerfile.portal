@@ -3,14 +3,15 @@ FROM ubuntu:bionic
 ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
 
-COPY . /usr/iot
+COPY Pipfile .
+COPY Pipfile.lock .
 
-WORKDIR /usr/iot
-
-RUN \
-    apt-get update && apt-get -y install python3-pip &&\
-    pip3 install pipenv && pipenv install --system --deploy
+RUN apt-get update &&\
+    apt-get -y install python3 &&\
+    apt-get -y install python3-pip &&\
+    pip3 install pipenv &&\
+    pipenv --python /usr/bin/python3 install --deploy --system
 
 EXPOSE 5000
 
-CMD ["python3","portal/controller.py"]
+CMD ["python3","data_portal/controller.py"]

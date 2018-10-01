@@ -13,6 +13,6 @@ pyserial = "*"
 flask = "*"
 flask-socketio = "*"
 socketio-client = "*"
-
-[requires]
-python_version = "3.6.4"
+pony = "*"
+pymysql = "*"
+flask-hashing = "*"
