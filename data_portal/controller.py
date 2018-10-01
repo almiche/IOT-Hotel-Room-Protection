@@ -24,18 +24,19 @@ class Server():
         def index():
             return 'Welcome to the api',200
 
-        @self.app.route('/api/v1.0/users',methods=['GET','PUT'])
-        @self.app.route('/api/v1.0/users/<user>',methods=['GET'])
+        @self.app.route('/api/v1.0/users',methods=['GET'])
+        @self.app.route('/api/v1.0/users/<user>',methods=['GET','PUT'])
         def handle_users(user=None):
             if request.method == 'GET':
                 if user is not None:
                     return jsonify(return_user(user))
             if request.method == 'PUT':
-                password = request.json['password']
-                salt = secrets.token_hex(nbytes=16)
-                hash = self.hashing.hash_value(password, salt=salt)
-                create_new_user(username=username,salt=salt,hash=hash)
-                return 'New user has been added',200
+                if user is not None:
+                    password = request.json['password']
+                    salt = secrets.token_hex(nbytes=16)
+                    hash = self.hashing.hash_value(password, salt=salt)
+                    create_new_user(username=user,salt=salt,hash=hash)
+                    return 'New user has been added',200
         
         @self.app.route('/api/v1.0/users/<user>/device/<device>',methods=['GET','PUT'])
         @self.app.route('/api/v1.0/users/<user>/device',methods=['GET'])
