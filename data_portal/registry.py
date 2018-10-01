@@ -92,8 +92,3 @@ def return_logs_for_device(owner_id,device_id,log_id=None):
         return log.to_dict()
 
 db.generate_mapping(create_tables=True)
-
-
-create_new_user("mike","pass","hash")
-create_new_device("543f34fg34","Rasberry Pi","0.0.1","Kitchen","mike")
-create_new_log("34,346,346,32,135,2345,35","5 am","543f34fg34")
