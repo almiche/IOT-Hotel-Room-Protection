@@ -22,7 +22,7 @@ class Server():
     def register_routes(self):
         @self.app.route('/')
         def index():
-            return 'Welcome to the api',200
+            return 'Welcome to the api v1.0',200
 
         @self.app.route('/api/v1.0/users',methods=['GET'])
         @self.app.route('/api/v1.0/users/<user>',methods=['GET','PUT'])
