@@ -50,7 +50,8 @@ def create_new_log(log_dump,timestamp,device):
 
 @db_session
 def create_new_device(mac,device_type,collector_version,room,owner):
-    if Device[mac] is not None:
+    devices =  select(device for device in Device if device.mac == mac)
+    if len(devices) > 0:
         print("Device already registered")
     else:
         Device(mac=mac,device_type=device_type,collector_version=collector_version,room=room,owner=owner)   
