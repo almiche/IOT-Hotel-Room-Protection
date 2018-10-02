@@ -42,7 +42,7 @@ def ingress(    db ,
                 ser,
                 spike_flag ,
                 nth_point,
-                name):
+                app):
     while True:
         read_out = 0
 
@@ -79,9 +79,10 @@ def ingress(    db ,
                     'raw_signals':db
                 }
             # TODO: Dump data here
-            r = requests.post("https://142.93.49.175/ingress", data={
-                                                                    'id':name,
-                                                                    'data':db
+            r = requests.post("http://35.184.28.68/api/v1.0/users/{}/device/{}/Log".format(app.owner,app.mac), data={
+                                                                    'log_dump':db,
+                                                                    'timestamp':'234234',
+                                                                    'device':app.mac
                                                                     })
             db = temp_lag_storage
 

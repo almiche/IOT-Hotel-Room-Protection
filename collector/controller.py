@@ -1,9 +1,7 @@
 from threading import Thread
 import sys
 import os
-
-sys.path.append("/home/mike/workspace/IOT-Hotel-Room-Protection/collector")
-from lib.cruncher import *
+from cruncher import *
 from flask import Flask, render_template
 import random
 import threading
@@ -21,6 +19,7 @@ class Collector():
         self.name = random.getrandbits(128)
         self.app = Flask(__name__)
         self.register_routes()
+        self.thread_name = random.getrandbits(128)
         try:  
             self.serialport = os.environ.get("PORT")
             self.owner = os.environ.get("OWNER")
@@ -28,7 +27,6 @@ class Collector():
         except KeyError: 
             print("Not exist environment value for %s" % "key_maybe_not_exist")
         self.app.run(host='0.0.0.0', port=5000)
-        self.thread_name = random.getrandbits(128)
 
     def register_routes(self):
         @self.app.route('/config')
