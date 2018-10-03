@@ -5,6 +5,7 @@ import os
 import numpy as np
 import time
 import requests
+import datetime
 
 def thresholding_algo(y, lag, threshold, influence):
     signals = np.zeros(len(y))
@@ -64,8 +65,7 @@ def ingress(    db ,
         else:
             print("Calibrating %d seconds remaining ..." % (lag - nth_point))
             print(db)
-        if(nth_point%(60/timeout) == 1 and nth_point > 1): # Dump data to mysqlite
-            print("Database is currently at %s dumping" % len(db))
+        if(nth_point%(10/timeout) == 1 and nth_point > 1): # Dump data to mysqlite
             '''
              Once a dump is being done, the last lag number of elements of the current list are moved to the front of the list 
              and the rest of the values are cleaned out this is in order for the moving average filter to still have values to lag behind with
@@ -78,12 +78,14 @@ def ingress(    db ,
                     'spikes':result['signals'],
                     'raw_signals':db
                 }
-            # TODO: Dump data here
-            r = requests.post("http://35.184.28.68/api/v1.0/users/{}/device/{}/Log".format(app.owner,app.mac), data={
-                                                                    'log_dump':db,
-                                                                    'timestamp':'234234',
-                                                                    'device':app.mac
-                                                                    })
+                # TODO: Dump data here
+                print(str(db))
+                r = requests.put("http://35.184.28.68/api/v1.0/users/{}/device/{}/Log/random".format(app.owner,app.mac), json={
+                                                                        'log_dump':str(db[0:40]),
+                                                                        'timestamp': str(datetime.datetime.utcnow().strftime("%a %b %d %H:%M:%S %Z %Y")),   
+                                                                        'device':app.mac
+                                                                        })
+                print(r.text)
             db = temp_lag_storage
 
 if __name__ == "__main__":
