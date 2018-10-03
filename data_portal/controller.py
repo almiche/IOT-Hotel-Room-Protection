@@ -8,6 +8,8 @@ from werkzeug.security import generate_password_hash, \
      check_password_hash
 from flask_hashing import Hashing
 import secrets
+from flask_cors import CORS,cross_origin
+import logging
 
 class Server():
 
@@ -15,17 +17,21 @@ class Server():
         self.app = Flask(__name__)
         self.socketio = SocketIO(self.app)
         self.hashing = Hashing(self.app)
+        CORS(self.app)
         self.app.config['SECRET_KEY'] = 'secret!'
         self.register_routes()
-        self.app.run(host='0.0.0.0', port=5000,debug=True)
+        logging.basicConfig(level=logging.INFO)
+        self.app.run(host='0.0.0.0', port=5000,debug=False)
 
     def register_routes(self):
         @self.app.route('/')
+        @cross_origin()
         def index():
             return 'Welcome to the api v1.0',200
 
         @self.app.route('/api/v1.0/users',methods=['GET'])
         @self.app.route('/api/v1.0/users/<user>',methods=['GET','PUT'])
+        @cross_origin(headers=['Content-Type'])
         def handle_users(user=None):
             if request.method == 'GET':
                 if user is not None:
@@ -40,6 +46,7 @@ class Server():
         
         @self.app.route('/api/v1.0/users/<user>/device/<device>',methods=['GET','PUT'])
         @self.app.route('/api/v1.0/users/<user>/device',methods=['GET'])
+        @cross_origin(headers=['Content-Type'])
         def handle_devices(user, device = None):
             if request.method == 'GET':
                 return jsonify(return_devices_for_user(user,device))
@@ -56,6 +63,7 @@ class Server():
 
         @self.app.route('/api/v1.0/users/<user>/device/<device>/Log/<log>',methods=['GET','PUT'])
         @self.app.route('/api/v1.0/users/<user>/device/<device>/Log',methods=['GET'])
+        @cross_origin(headers=['Content-Type'])
         def handle_logs(user,device,log = None):
             if request.method == 'GET':
                 return jsonify(return_logs_for_device(user,device,log))
