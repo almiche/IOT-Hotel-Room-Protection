@@ -17,17 +17,18 @@ class Server():
         self.app = Flask(__name__)
         self.socketio = SocketIO(self.app)
         self.hashing = Hashing(self.app)
-        CORS(self.app)
+        CORS(self.app,expose_headers='Authorization')
         self.app.config['SECRET_KEY'] = 'secret!'
+        self.app.config['TEMPLATE_AUTO_RELOAD'] = True
         self.register_routes()
-        logging.basicConfig(level=logging.INFO)
-        self.app.run(host='0.0.0.0', port=5000,debug=False)
+        self.app.run(host='0.0.0.0', port=5001,debug=True)
 
     def register_routes(self):
-        @self.app.route('/')
-        @cross_origin()
-        def index():
-            return 'Welcome to the api v1.0',200
+
+        @self.app.after_request
+        def after_request(response):
+            response.headers.add('Access-Control-Allow-Credentials', 'true')
+            return response
 
         @self.app.route('/api/v1.0/users',methods=['GET'])
         @self.app.route('/api/v1.0/users/<user>',methods=['GET','PUT'])
@@ -61,10 +62,11 @@ class Server():
                     # Add verification here
                     return 'New device has been added',200
 
-        @self.app.route('/api/v1.0/users/<user>/device/<device>/Log/<log>',methods=['GET','PUT'])
-        @self.app.route('/api/v1.0/users/<user>/device/<device>/Log',methods=['GET'])
+        @self.app.route('/api/v1.0/users/<user>/device/<device>/logs/<log>',methods=['GET'])
+        @self.app.route('/api/v1.0/users/<user>/device/<device>/logs',methods=['GET','PUT'])
+        @self.app.route('/api/v1.0/users/<user>/logs',methods=['GET'])
         @cross_origin(headers=['Content-Type'])
-        def handle_logs(user,device,log = None):
+        def handle_logs(user,device=None,log = None):
             if request.method == 'GET':
                 return jsonify(return_logs_for_device(user,device,log))
             if request.method == 'PUT':

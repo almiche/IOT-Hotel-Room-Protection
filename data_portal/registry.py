@@ -1,6 +1,7 @@
 from pony.orm import *
 import json
 import os
+import pry
 
 try:  
    username = os.environ.get("DB_USER")
@@ -74,18 +75,24 @@ def return_devices_for_user(owner_id,device_id=None):
         return device
 
 @db_session
-def return_logs_for_device(owner_id,device_id,log_id=None):
+def return_logs_for_device(owner_id,device_id=None,log_id=None):
     if log_id is None:
-        log_list = []
-        logs = select(log 
-                        for owner in User
-                        for device in owner.devices
-                        for log in device.logs 
-                        if (owner.username == owner_id and
-                            device.mac == device_id ))
-        for log in logs:
-            log_list.append(log.to_dict())
-        return log_list
+        if device_id is not None:
+            log_list = []
+            logs = select(log 
+                            for owner in User
+                            for device in owner.devices
+                            for log in device.logs 
+                            if (owner.username == owner_id and
+                                device.mac == device_id ))
+            for log in logs:
+                log_list.append(log.to_dict())
+            return log_list
+        else:
+            device_logs_map = {}
+            for device in User[owner_id].devices:
+                device_logs_map[device.mac] = [log.to_dict() for log in device.logs]
+            return device_logs_map
     else:
         log = Log[log_id] if Log[log_id].device.mac == device_id and Log[log_id].device.owner.username == owner_id else None
         return log.to_dict()
