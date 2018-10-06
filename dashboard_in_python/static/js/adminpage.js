@@ -22,7 +22,7 @@ $(document).ready(function() {
       }
     });
 
-    xhr.open("GET", "http://localhost:5000/api/v1.0/users/tim/logs");
+    xhr.open("GET", "http://localhost:5000/api/v1.0/users/mike/logs");
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.setRequestHeader("Cache-Control", "no-cache");
 
