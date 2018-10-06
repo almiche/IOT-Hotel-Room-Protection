@@ -52,7 +52,7 @@ $(document).ready(function() {
       });
     });
 
-    xhr.open("GET", "http://35.238.172.4/api/v1.0/users/tim/device");
+    xhr.open("GET", "http://35.238.172.4/api/v1.0/users/mike/device");
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.setRequestHeader("Cache-Control", "no-cache");
 
