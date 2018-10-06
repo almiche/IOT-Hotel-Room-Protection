@@ -1,7 +1,6 @@
 from pony.orm import *
 import json
 import os
-import pry
 
 try:  
    username = os.environ.get("DB_USER")

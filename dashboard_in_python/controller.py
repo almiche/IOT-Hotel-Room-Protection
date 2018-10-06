@@ -19,7 +19,7 @@ class Server():
         self.app.config['SECRET_KEY'] = 'secret!'
         self.app.config['TEMPLATE_AUTO_RELOAD'] = True
         self.register_routes()
-        self.app.run(host='0.0.0.0', port=5000,debug=True)
+        self.app.run(host='0.0.0.0', port=5001,debug=True)
 
     def register_routes(self):
         @self.app.route('/')
