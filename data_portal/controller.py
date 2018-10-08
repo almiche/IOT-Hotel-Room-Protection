@@ -10,6 +10,7 @@ from flask_hashing import Hashing
 import secrets
 from flask_cors import CORS,cross_origin
 import logging
+import pry
 
 class Server():
 
@@ -57,7 +58,7 @@ class Server():
                     device_type = request.json['device_type']
                     collector_version = request.json['collector_version']
                     room = request.json['room']
-                    owner =request.json['owner']
+                    owner =user
                     create_new_device(mac,device_type,collector_version,room,owner)
                     # Add verification here
                     return 'New device has been added',200
@@ -70,12 +71,10 @@ class Server():
             if request.method == 'GET':
                 return jsonify(return_logs_for_device(user,device,log))
             if request.method == 'PUT':
-                if log:
-                    log_dump = request.json['log_dump']
-                    timestamp  = request.json['timestamp']
-                    device = request.json['device']
-                    create_new_log(log_dump,timestamp,device)
-                    return 'Log added',200
+                log_dump = request.json['log_dump']
+                timestamp  = request.json['timestamp']
+                device = device
+                return create_new_log(log_dump,timestamp,device)
 
 if __name__ == "__main__":
     Server()
