@@ -17,6 +17,7 @@ class User(db.Entity):
     password_hash = Required(str)
     salt =  Required(str)
     devices = Set('Device')
+    api_token = Optional(str)
 
 class Device(db.Entity):
     mac = PrimaryKey(str,auto=False)
@@ -31,7 +32,20 @@ class Log(db.Entity):
     log_dump = Required(str)
     timestamp = Required(str)
 
+
 #TODO OAuth
+@db_session
+def add_new_api_token(user,token):
+    User[user].api_token = token
+
+@db_session
+def delete_api_token(user):
+    User[user].api_token = ""
+
+@db_session
+def check_login(user):
+    return User[user].api_token
+
 @db_session
 def create_new_user(username,hash,salt):
     users =  select(user for user in User if user.username == username)
@@ -62,38 +76,30 @@ def return_user(user):
     return User[user].to_dict()
 
 @db_session
-def return_devices_for_user(owner_id,device_id=None):
-    if device_id is None:
-        device_list = []
-        devices = User[owner_id].devices
-        for device in devices:
-            device_list.append(device.to_dict())
-        return device_list
-    else:
-        device = Device[device_id] if Device[device_id].owner.username == owner_id else None
-        return device
+def return_devices_for_user(owner_id):
+    device_list = []
+    devices = User[owner_id].devices
+    for device in devices:
+        device_list.append(device.to_dict())
+    return device_list
 
 @db_session
-def return_logs_for_device(owner_id,device_id=None,log_id=None):
-    if log_id is None:
-        if device_id is not None:
-            log_list = []
-            logs = select(log 
-                            for owner in User
-                            for device in owner.devices
-                            for log in device.logs 
-                            if (owner.username == owner_id and
-                                device.mac == device_id ))
-            for log in logs:
-                log_list.append(log.to_dict())
-            return log_list
-        else:
-            device_logs_map = {}
-            for device in User[owner_id].devices:
-                device_logs_map[device.mac] = [log.to_dict() for log in device.logs]
-            return device_logs_map
+def return_logs_for_device(owner_id,device_id=None):
+    if device_id is not None:
+        log_list = []
+        logs = select(log 
+                        for owner in User
+                        for device in owner.devices
+                        for log in device.logs 
+                        if (owner.username == owner_id and
+                            device.mac == device_id ))
+        for log in logs:
+            log_list.append(log.to_dict())
+        return log_list
     else:
-        log = Log[log_id] if Log[log_id].device.mac == device_id and Log[log_id].device.owner.username == owner_id else None
-        return log.to_dict()
+        device_logs_map = {}
+        for device in User[owner_id].devices:
+            device_logs_map[device.mac] = [log.to_dict() for log in device.logs]
+        return device_logs_map
 
 db.generate_mapping(create_tables=True)

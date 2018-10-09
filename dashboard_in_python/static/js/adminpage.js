@@ -1,13 +1,15 @@
 $(document).ready(function() {
   logs = {};
   currentDevice = "";
-
+  currentToken = ""
   // Poll the logs
   setInterval(function() {
     var currentTime = new Date();
     $("#updateTime").text(currentTime);
-    getDevices();
-    getLogs();
+    if (Cookies.get('token') != null){
+      getDevices();
+      getLogs();
+    }
   }, 3000);
 
   function getLogs() {
@@ -22,24 +24,75 @@ $(document).ready(function() {
       }
     });
 
-    xhr.open("GET", "http://35.238.172.4/api/v1.0/users/mike/logs");
+    xhr.open("GET", "/users/mike/logs");
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.setRequestHeader("Cache-Control", "no-cache");
 
-    xhr.send(data);
+    // xhr.send(data);
   }
+  
+  $("#signin").on("click",function login(){
+    var data = JSON.stringify({
+      "user": $("#username").val(),
+      "password": $("#password").val()
+    });
+  
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+  
+    xhr.addEventListener("readystatechange", function() {
+      if (this.readyState === 4) {
+        response = JSON.parse(this.responseText);
+        Cookies.set('user', response.user);
+        Cookies.set('token', response.token);
+      }
+    });
+  
+    xhr.open("POST", "/generate-token");
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader("Cache-Control", "no-cache");
+  
+    xhr.send(data);
+    
+  });
+
+  $("#logout").on("click",function login(){
+    var data = JSON.stringify({
+      "user": Cookies.get('user'),
+      "token": Cookies.get('token')
+    });
+  
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+  
+    xhr.addEventListener("readystatechange", function() {
+      if (this.readyState === 4) {
+        response = JSON.parse(this.responseText);
+        Cookies.remove('user');
+        Cookies.remove('token');
+      }
+    });
+  
+    xhr.open("POST", "/signout");
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader("Cache-Control", "no-cache");
+  
+    xhr.send(data);
+    
+  });
 
   function getDevices() {
-    var data = null;
+    var data = {};
 
     var xhr = new XMLHttpRequest();
     xhr.withCredentials = true;
 
     xhr.addEventListener("readystatechange", function() {
       if (this.readyState === 4) {
-        devices = JSON.parse(this.responseText);
+        response = JSON.parse(this.responseText);
+        Cookies.set('token',response.token)
         $("#deviceSubmenu").empty();
-        devices.forEach(function(device) {
+        response.devices.forEach(function(device) {
           $("#deviceSubmenu").append(
             `<li ><a class="device" name="${device.mac}" href="#"><strong>${
               device.device_type
@@ -52,7 +105,7 @@ $(document).ready(function() {
       });
     });
 
-    xhr.open("GET", "http://35.238.172.4/api/v1.0/users/mike/device");
+    xhr.open("GET", `/users/mike/device?token=${Cookies.get('token')}`);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.setRequestHeader("Cache-Control", "no-cache");
 

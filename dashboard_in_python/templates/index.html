@@ -27,6 +27,8 @@
     <!-- Theme included stylesheets -->
     <script src="/static/js/adminpage.js" type="text/javascript"></script>
     <script src="/static/js/gauge.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <link rel="shortcut icon" type="image/png" href="/static/imgs/favicon.ico">
 </head>
 <style>
     #usr {
@@ -41,19 +43,32 @@
         <!-- Sidebar Holder -->
         <nav id="sidebar">
             <div class="sidebar-header">
-                <h3> Michel's Dashboard</h3>
+            <h3>
+                <img src="/static/imgs/iot_door.png" style="width:50px;height:50px;float:right">
+                    Michel's Dashboard</h3>
             </div>
             <ul class="list-unstyled components">
                 <li>
                     <a href="#deviceSubmenu" data-toggle="collapse" aria-expanded="false">Devices</a>
                     <ul class="list-unstyled" id="deviceSubmenu">
                     </ul>
+                    <label for="exampleInputEmail1">User Name:</label>
+                    <input id="signupUsername" class="form-control signup" style="width:90%;margin-left: 5%;" type="text"></input>
+                    <label for="exampleInputEmail1">Password:</label>
+                    <input id="signupPassword" class="form-control signup" style="width:90%;margin-left: 5%;" type="text"></input>
+                    <label for="exampleInputEmail1">Repeat Password:</label>
+                    <input id="repeatPassword" class="form-control signup" style="width:90%;margin-left: 5%;" type="text"></input>
+                    <label for="exampleInputEmail1">User Name:</label>
+                    <input id="username" class="form-control signin" style="width:90%;margin-left: 5%;" type="text"></input>
+                    <label for="exampleInputEmail1">Password:</label>
+                    <input id="password" class="form-control signin" style="width:90%;margin-left: 5%;" type="text"></input>
                 </li>
             </ul>
 
             <ul class="list-unstyled CTAs">
                 <li>
-                    <a href="https://bootstrapious.com/p/bootstrap-sidebar" class="download">Logout</a>
+                    <a id="logout" href="#" class="download">Logout</a>
+                    <a id="signin" href="#" class="download">Sign In</a>
                 </li>
             </ul>
         </nav>
