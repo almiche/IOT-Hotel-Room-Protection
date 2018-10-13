@@ -24,11 +24,11 @@ $(document).ready(function() {
       }
     });
 
-    xhr.open("GET", "/users/mike/logs");
+    xhr.open("GET", `/users/${Cookies.get('user')}/logs?token=${Cookies.get('token')}`);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.setRequestHeader("Cache-Control", "no-cache");
 
-    // xhr.send(data);
+    xhr.send(data);
   }
   
   $("#signin").on("click",function login(){
@@ -90,7 +90,6 @@ $(document).ready(function() {
     xhr.addEventListener("readystatechange", function() {
       if (this.readyState === 4) {
         response = JSON.parse(this.responseText);
-        Cookies.set('token',response.token)
         $("#deviceSubmenu").empty();
         response.devices.forEach(function(device) {
           $("#deviceSubmenu").append(
@@ -105,7 +104,7 @@ $(document).ready(function() {
       });
     });
 
-    xhr.open("GET", `/users/mike/device?token=${Cookies.get('token')}`);
+    xhr.open("GET", `/users/${Cookies.get('user')}/device?token=${Cookies.get('token')}`);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.setRequestHeader("Cache-Control", "no-cache");
 

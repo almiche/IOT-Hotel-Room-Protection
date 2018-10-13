@@ -33,6 +33,7 @@ class Server():
             if not request.json.get('token'):
                 return False
             token = request.json['token']
+        print(return_user(user))
         if check_login(user) and return_user(user)['api_token'] == token:
             return True
         else:
@@ -72,7 +73,6 @@ class Server():
         @self.app.route('/api/v1.0/signout',methods=['POST'])
         def handle_sign_out():
             if request.method == 'POST':
-                pry()
                 user = request.json['user']
                 delete_api_token(user)
                 return jsonify({'status':'OK'}),200
@@ -83,7 +83,6 @@ class Server():
             if request.method == 'GET':
                 if self.authenticate(user,request):
                     response = return_user(user)
-                    response['token'] = self.generate_new_token(user)
                     return jsonify(response),200
                 else:
                     return jsonify({'status':'You are not authorized to view this content'}),200
@@ -101,7 +100,6 @@ class Server():
                 if request.method == 'GET':
                     response = {}
                     response['devices'] = return_devices_for_user(user)
-                    response['token'] = self.generate_new_token(user)
                     return jsonify(response),200
                 if request.method == 'PUT':
                     mac = request.json['mac']
@@ -111,7 +109,7 @@ class Server():
                     owner =user
                     create_new_device(mac,device_type,collector_version,room,owner)
                     # Add verification here
-                    return jsonify({'status':'New device has been added','token':self.generate_new_token(user)}),200
+                    return jsonify({'status':'New device has been added'}),200
             else:
                 return jsonify({'status':'You are not authorized to view this content'}),200
 
@@ -121,9 +119,7 @@ class Server():
         def handle_logs(user,device=None,log = None):
                 if request.method == 'GET':
                     if self.authenticate(user,request):
-                        response = {}
-                        response['logs'] = return_logs_for_device(user,device)
-                        response['token'] = self.generate_new_token(user)
+                        response = return_logs_for_device(user,device)
                         return jsonify(response),200
                     else:
                         return jsonify({'status':'You are not authorized to view this content'}),200

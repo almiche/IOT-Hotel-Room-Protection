@@ -30,12 +30,10 @@ class Server():
 
         @self.app.route('/generate-token',methods=['POST'])
         def signin():
-            pry()
             wush = request
             data = request.json
             r = requests.post("http://localhost:5000/api/v1.0/generate-token", json=data)
             print(r.text)
-            pry()
             return jsonify(r.json()),200
 
         @self.app.route('/signout',methods=['POST'])
