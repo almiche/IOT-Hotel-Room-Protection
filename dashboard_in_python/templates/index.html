@@ -45,22 +45,22 @@
             <div class="sidebar-header">
             <h3>
                 <img src="/static/imgs/iot_door.png" style="width:50px;height:50px;float:right">
-                    Michel's Dashboard</h3>
+                     <div id="title">IOT DOOR HANGER</div></h3>
             </div>
             <ul class="list-unstyled components">
                 <li>
-                    <a href="#deviceSubmenu" data-toggle="collapse" aria-expanded="false">Devices</a>
-                    <ul class="list-unstyled" id="deviceSubmenu">
+                        <a href="#deviceSubmenu" data-toggle="collapse" id="deviceSubmenuContainer" aria-expanded="false">Devices</a>
+                        <ul class="list-unstyled" id="deviceSubmenu">
                     </ul>
-                    <label for="exampleInputEmail1">User Name:</label>
+                    <label for="exampleInputEmail1" class="signup">User Name:</label>
                     <input id="signupUsername" class="form-control signup" style="width:90%;margin-left: 5%;" type="text"></input>
-                    <label for="exampleInputEmail1">Password:</label>
+                    <label for="exampleInputEmail1" class="signup">Password:</label>
                     <input id="signupPassword" class="form-control signup" style="width:90%;margin-left: 5%;" type="text"></input>
-                    <label for="exampleInputEmail1">Repeat Password:</label>
+                    <label for="exampleInputEmail1" class="signup">Repeat Password:</label>
                     <input id="repeatPassword" class="form-control signup" style="width:90%;margin-left: 5%;" type="text"></input>
-                    <label for="exampleInputEmail1">User Name:</label>
+                    <label for="exampleInputEmail1" class="signin">User Name:</label>
                     <input id="username" class="form-control signin" style="width:90%;margin-left: 5%;" type="text"></input>
-                    <label for="exampleInputEmail1">Password:</label>
+                    <label for="exampleInputEmail1"  class="signin">Password:</label>
                     <input id="password" class="form-control signin" style="width:90%;margin-left: 5%;" type="text"></input>
                 </li>
             </ul>
@@ -69,6 +69,7 @@
                 <li>
                     <a id="logout" href="#" class="download">Logout</a>
                     <a id="signin" href="#" class="download">Sign In</a>
+                    <a id="signup" href="#" class="download">Sign Up</a>
                 </li>
             </ul>
         </nav>

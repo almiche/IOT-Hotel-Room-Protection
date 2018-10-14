@@ -2,6 +2,38 @@ $(document).ready(function() {
   logs = {};
   currentDevice = "";
   currentToken = ""
+
+  if(!Cookies.get('user')){
+      stateSwitch('OUT');
+  }
+  else if (Cookies.get('user')){
+    stateSwitch('IN');
+  }
+
+  function stateSwitch(state){
+    switch(state){
+      case 'IN':
+        $("#title").text(`${Cookies.get('user')}'s Dashboard`);
+        $(".signin").css('display','none');
+        $(".signup").css('display','none');
+        $("#signup,#signin").css('display',"none")
+        $('#deviceSubmenuContainer').css('display','block');
+        $('#logout').css('display','block')
+      break;
+      case 'OUT':
+        $('.signup').css('display','none');
+        $('#deviceSubmenu').css('display','none');
+        $('#logout').css('display','none');
+        $('#signup,#signin').css('display','block');
+        $('.signin').css('display','block');
+        $('#deviceSubmenuContainer').css('display','none');
+      break;
+      case 'SIGNUP':
+        $('.signup').css('display','block');
+      break;
+    }
+  }
+
   // Poll the logs
   setInterval(function() {
     var currentTime = new Date();
@@ -45,6 +77,8 @@ $(document).ready(function() {
         response = JSON.parse(this.responseText);
         Cookies.set('user', response.user);
         Cookies.set('token', response.token);
+        getDevices();
+        stateSwitch('IN');
       }
     });
   
@@ -70,6 +104,7 @@ $(document).ready(function() {
         response = JSON.parse(this.responseText);
         Cookies.remove('user');
         Cookies.remove('token');
+        stateSwitch('OUT');
       }
     });
   
