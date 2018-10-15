@@ -46,10 +46,8 @@ def ingress(    db ,
                 spike_flag ,
                 nth_point,
                 app):
-    print('HERE')
     while True:
         read_out = read_accelerometer(ser)
-        print(read_out)
         db.append(read_out)
         nth_point += 1
         print("Point is currently %s and list is currently at %s" % (read_out,nth_point))
@@ -72,13 +70,9 @@ def ingress(    db ,
             temp_lag_storage = db[-lag:]
             if spike_flag:
                 spike_flag = False
-                # Adding some extra data in order to have a nicer graph and stop detection for a bit after a spike
+                # Padding data and timing out spike detection for a few seconds
                 for current in range(0,spike_flag): 
                     db.append(read_accelerometer(ser))
-                result = {
-                    'spikes':result['signals'],
-                    'raw_signals':db
-                }
                 # TODO: Dump data here
                 print(str(db))
                 r = requests.put("{}/api/v1.0/users/{}/device/{}/logs".format(app.portal,app.owner,app.mac), json={
