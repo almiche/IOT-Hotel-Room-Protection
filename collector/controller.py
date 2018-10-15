@@ -24,6 +24,7 @@ class Collector():
             self.serialport = os.environ.get("PORT")
             self.owner = os.environ.get("OWNER")
             self.mac = os.environ.get("MAC")
+            self.data_portal = os.environ.get("PORTAL")
         except KeyError: 
             print("Not exist environment value for %s" % "key_maybe_not_exist")
         self.app.run(host='0.0.0.0', port=5000)
@@ -42,7 +43,7 @@ class Collector():
                 1, # Influence of new point
                 1, # Read frequency on the serial connection
                 serial.Serial(self.serialport, 115200, timeout = 1),
-                False,
+                20,
                 0,
                 self
             ), kwargs={})

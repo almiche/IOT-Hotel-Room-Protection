@@ -1,16 +1,18 @@
 version: "2"
 services:
   iot_door:
+    build: .
     image: iot_door:1.0
     environment:
       - MAC=b8:27:eb:e4:0e:ab
       - PORT=/dev/ttyUSB0
       - OWNER=mike
-    devices:
-      - "/dev/ttyUSB0:/dev/ttyUSB0"
-    volumes:
-      - ../collector:/app
+      - PORTAL=http://35.238.172.4
     restart: always
     privileged: true
+    volumes:
+      - ./collector:/collector
     ports:
       - "80:5000"
+    devices:
+      - "/dev/ttyUSB0:/dev/ttyUSB0"

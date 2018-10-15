@@ -8,14 +8,16 @@ import requests
 import datetime
 
 def thresholding_algo(y, lag, threshold, influence):
-    signals = np.zeros(len(y))
-    filteredY = np.array(y)
+    signals = np.zeros(len(y)) # Build array of zeros to hold signals
+    filteredY = np.array(y) # Insert current points in another array
     avgFilter = [0]*len(y)
     stdFilter = [0]*len(y)
-    avgFilter[lag - 1] = np.mean(y[0:lag])
-    stdFilter[lag - 1] = np.std(y[0:lag])
-    for i in range(lag, len(y)):
-        if abs(y[i] - avgFilter[i-1]) > threshold * stdFilter [i-1]:
+    avgFilter[lag - 1] = np.mean(y[0:lag]) # Calculate the average of the lag data points
+    stdFilter[lag - 1] = np.std(y[0:lag])  # Calculate std dev of the lag data points
+    for i in range(lag, len(y)):    # Going from lag to the end
+        if abs(y[i] - avgFilter[i-1]) > threshold * stdFilter [i-1]:    
+            # If point's distance to the moving average is larger than the threshhold * the moving std dev
+            # then flag this point
             if y[i] > avgFilter[i-1]:
                 signals[i] = 1
             else:
@@ -45,12 +47,7 @@ def ingress(    db ,
                 nth_point,
                 app):
     while True:
-        read_out = 0
-
-        try:
-            read_out = int(ser.readline().decode('utf-8'))
-        except Exception as e:
-            print(type(e))
+        read_out = read_accelerometer(ser)
 
         db.append(read_out)
         nth_point += 1
@@ -65,7 +62,7 @@ def ingress(    db ,
         else:
             print("Calibrating %d seconds remaining ..." % (lag - nth_point))
             print(db)
-        if(nth_point%(10/timeout) == 1 and nth_point > 1): # Dump data to mysqlite
+        if(nth_point%(10/timeout) == 1 and nth_point > 1): # Dump data
             '''
              Once a dump is being done, the last lag number of elements of the current list are moved to the front of the list 
              and the rest of the values are cleaned out this is in order for the moving average filter to still have values to lag behind with
@@ -74,19 +71,28 @@ def ingress(    db ,
             temp_lag_storage = db[-lag:]
             if spike_flag:
                 spike_flag = False
+                # Adding some extra data in order to have a nicer graph and stop detection for a bit after a spike
+                for current in range(0:spike_flag): 
+                    db.append(read_accelerometer(ser))
                 result = {
                     'spikes':result['signals'],
                     'raw_signals':db
                 }
                 # TODO: Dump data here
                 print(str(db))
-                r = requests.put("http://35.184.28.68/api/v1.0/users/{}/device/{}/Log/random".format(app.owner,app.mac), json={
+                r = requests.put("{}/api/v1.0/users/{}/device/{}/logs".format(app.portal,app.owner,app.mac), json={
                                                                         'log_dump':str(db[0:40]),
                                                                         'timestamp': str(datetime.datetime.utcnow().strftime("%a %b %d %H:%M:%S %Z %Y")),   
-                                                                        'device':app.mac
                                                                         })
                 print(r.text)
             db = temp_lag_storage
+
+def read_accelerometer(ser):
+    try:
+        read_out = int(ser.readline().decode('utf-8'))
+    except Exception as e:
+        print(type(e))
+    return read_out
 
 if __name__ == "__main__":
     # Port should be passed in as a config
