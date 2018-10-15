@@ -42,7 +42,7 @@ class Collector():
                 3.5, # Number of standard deviations away from the moving average will cause a trigger
                 1, # Influence of new point
                 1, # Read frequency on the serial connection
-                serial.Serial(self.serialport, 115200, timeout = 1),
+                serial.Serial(self.serialport, 9600, timeout = 1),
                 20,
                 0,
                 self

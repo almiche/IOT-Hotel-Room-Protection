@@ -46,9 +46,10 @@ def ingress(    db ,
                 spike_flag ,
                 nth_point,
                 app):
+    print('HERE')
     while True:
         read_out = read_accelerometer(ser)
-
+        print(read_out)
         db.append(read_out)
         nth_point += 1
         print("Point is currently %s and list is currently at %s" % (read_out,nth_point))
@@ -72,7 +73,7 @@ def ingress(    db ,
             if spike_flag:
                 spike_flag = False
                 # Adding some extra data in order to have a nicer graph and stop detection for a bit after a spike
-                for current in range(0:spike_flag): 
+                for current in range(0,spike_flag): 
                     db.append(read_accelerometer(ser))
                 result = {
                     'spikes':result['signals'],
@@ -89,10 +90,9 @@ def ingress(    db ,
 
 def read_accelerometer(ser):
     try:
-        read_out = int(ser.readline().decode('utf-8'))
+        return int(ser.readline().decode('utf-8'))
     except Exception as e:
         print(type(e))
-    return read_out
 
 if __name__ == "__main__":
     # Port should be passed in as a config
