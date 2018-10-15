@@ -75,7 +75,7 @@ def ingress(    db ,
                     db.append(read_accelerometer(ser))
                 # TODO: Dump data here
                 print(str(db))
-                r = requests.put("{}/api/v1.0/users/{}/device/{}/logs".format(app.portal,app.owner,app.mac), json={
+                r = requests.put("{}/api/v1.0/users/{}/device/{}/logs".format(app.data_portal,app.owner,app.mac), json={
                                                                         'log_dump':str(db[0:40]),
                                                                         'timestamp': str(datetime.datetime.utcnow().strftime("%a %b %d %H:%M:%S %Z %Y")),   
                                                                         })
