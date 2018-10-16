@@ -2,7 +2,7 @@
 ![Docker Pulls](https://img.shields.io/docker/pulls/mashape/kong.svg?style=for-the-badge)  
 [![Docker Hub repository](http://dockeri.co/image/almiche/iot_hotel)](https://registry.hub.docker.com/u/almiche/iot_hotel/)
 
-# IOT-Hotel-Room-Protection
+# ![alt](https://github.com/almiche/IOT-Hotel-Room-Protection/blob/master/iot_door_icon_10%25.png?raw=true)IOT-Hotel-Room-Protection
 ESP8266 based project for securing hotel rooms
 
 ## Why do I need this ?
