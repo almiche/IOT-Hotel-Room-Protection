@@ -31,12 +31,14 @@ I have started designing the 3d component and will be posting regular updates of
 
 It's been quite a while since the last update and I have had some long hiatuses. 
 
-| ![alt text](https://github.com/almiche/IOT-Hotel-Room-Protection/blob/master/3dRender_1.PNG?raw=true)  |![alt text](https://github.com/almiche/IOT-Hotel-Room-Protection/blob/master/Capture.PNG?raw=true) |
+| ![alt text](https://github.com/almiche/IOT-Hotel-Room-Protection/blob/master/bump.gif?raw=true)  |![alt text](https://github.com/almiche/IOT-Hotel-Room-Protection/blob/master/dashboard.png?raw=true) |
 |---|---|
 
 For the last 2 weeks I have pushing hard into making this project a reality. Alot has happened since the last update so a rundown is in order. First the application is segmented into main parts the frontend ui and the backend app which communicates with the database. All of this is  containzeried and orchestrated runnning in a three node cluster kubernetes instance in google cloud (because the two end users of this system really need high availbility ). The system is designed  to be completely stateless in order to run correctly in a distributed scenario any stateful data is stored in MySQL.
 
 The hardware  part of this project is also complete I have 3d printed the shell and attached a rasberry pi zero w paired with an esp8285 and an adxl345 accelerometer all with unsoldered headers. A little soldering here and there and some double sided and it was all to go. The device is running a flask app in its main thread in order to allow simple controls via REST API to the device. In the secondary thread is the actual algorithm which does real time peak detection by comparing the distance of the current  point from the moving average to the current standard deviation multiplied by a multiple of standard deviations known as the threshold. It then proceeds to POST to the one of the three flask containers in the cloud.
+
+![alt text](https://github.com/almiche/IOT-Hotel-Room-Protection/blob/master/innards.jpg?raw=true)
 
 I have also implmented a login system whihch allows users to create accounts and add their own door hanger units in order to log !
 
