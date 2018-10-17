@@ -22,17 +22,18 @@ $(document).ready(function() {
         $(".signup").css('display','none');
         $("#signup,#signin").css('display',"none")
         $('#deviceSubmenuContainer').css('display','block');
-        $('#deviceSubmenu').css('display','block')
-        $('#logout').css('display','block')
+        $('#deviceSubmenu').css('display','block');
+        $('#logout,#newDevice').css('display','block');
         getDevices();
       break;
       case 'OUT':
         $('.signup').css('display','none');
         $('#deviceSubmenu').css('display','none');
-        $('#logout').css('display','none');
+        $('#logout,#newDevice').css('display','none');
         $('#signup,#signin').css('display','block');
         $('.signin').css('display','block');
         $('#deviceSubmenuContainer').css('display','none');
+        $("#title").text(`IOT Dashboard`);
       break;
       case 'SIGNUP':
         $('.signup').css('display','block');
@@ -117,7 +118,7 @@ $(document).ready(function() {
         $('#content').css('display','none');
       }
     });
-  
+
     xhr.open("POST", "/signout");
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.setRequestHeader("Cache-Control", "no-cache");
@@ -125,6 +126,43 @@ $(document).ready(function() {
     xhr.send(data);
     
   });
+
+  $('#newDevice').on('click',function(){
+    $('#newDevice').css('display','none');
+    $('#confirmDevice').css('display','block');
+    $(".deviceInfo").css('display','block')
+  });
+
+  $("#confirmDevice").on("click",function login(){
+    var data = JSON.stringify({
+      "mac": $('#mac').val(),
+      "room": $('#room').val(),
+      "device_type": $('#type').val(),
+      "collector_version": $('#collector').val(),
+      "token":Cookies.get('token')
+    });
+  
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+  
+    xhr.addEventListener("readystatechange", function() {
+      if (this.readyState === 4) {
+        response = JSON.parse(this.responseText);
+        $('#newDevice').css('display','block');
+        $('#confirmDevice').css('display','none');
+        $(".deviceInfo").css('display','none');
+        alert(response['status']);
+      }
+    });
+
+    xhr.open("PUT", `/users/${Cookies.get('user')}/device`);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader("Cache-Control", "no-cache");
+  
+    xhr.send(data);
+    
+  });
+
 
   function getDevices() {
     var data = {};
@@ -145,7 +183,12 @@ $(document).ready(function() {
         });
       }
       $(".device").on("click", function() {
-        infoOnDevice(this.name);
+        if (logs[this.name].length != 0){
+          infoOnDevice(this.name);
+        }
+        else{
+          alert(`${this.name} has no logs yet!`);
+        }
       });
     });
 

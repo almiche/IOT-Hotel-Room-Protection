@@ -2,6 +2,14 @@
     DEMO STYLE
 */
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+#newDevice {
+  display:none;
+}
+
+#confirmDevice {
+  display:none;
+}
+
 #content {
   display: none;
   flex-direction: column;
@@ -9,6 +17,11 @@
 .cards{
     flex:0.2;
 }
+
+.deviceInfo {
+  display:none;
+}
+
 .graph{
     flex:0.2;
 }
