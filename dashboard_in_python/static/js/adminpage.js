@@ -10,10 +10,9 @@ $(document).ready(function() {
     else if (Cookies.get('user')){
       stateSwitch('IN');
       $('#content').css('display','flex');
+      getDevices();
+      getLogs();
   }
-
-  getDevices();
-  getLogs();
 
   function stateSwitch(state){
     switch(state){
@@ -60,6 +59,9 @@ $(document).ready(function() {
     xhr.addEventListener("readystatechange", function() {
       if (this.readyState === 4) {
         logs = JSON.parse(this.responseText);
+        if (currentDevice){
+          updateCards(logs[currentDevice][0]);
+        }
       }
     });
 
@@ -179,6 +181,10 @@ $(document).ready(function() {
         dump.push(parseInt(digit));
       });
     myChart.data.datasets[0].data = dump;
+    updateCards(log);
+  }
+
+  function updateCards(log){
     myChart.options.title.text = `Acceleration data ${log.device} at ${log.timestamp}`
     myChart.update();
     $("#totalAlerts").text(logs[currentDevice].length);
