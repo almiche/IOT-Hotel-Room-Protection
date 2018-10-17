@@ -232,19 +232,14 @@ $(document).ready(function() {
     myChart.update();
     $("#totalAlerts").text(logs[currentDevice].length);
     rating = Math.max.apply(null,dump)/Math.min.apply(null,dump)
-    switch(rating){
-      case rating > 1.0:
-        $("#rating").text(' 🤙🏂😱🤡 That was nectar!');
-      break;
-      case rating > 3.0:
-        $("#rating").text('Ouf that was fire! \n 🚔🔥');
-      break;
-      case rating < 1.0:
-        $("#rating").text('Sneaky! \n 👺🤫');
-      break;
-      default:
-        console.log('default');
-      break;
+    if (rating >= 2.0){
+      $("#rating").text('Ouf that was fire! \n 🚔🔥');
+    }
+    else if (rating > 1.0){
+      $("#rating").text(' 🤙🏂😱🤡 That was nectar!');
+    }
+    else if (rating < 1.0){
+      $("#rating").text('Sneaky! \n 👺🤫');
     }
   }
 
