@@ -113,7 +113,7 @@ def register_routes():
     def handle_logs(user,device=None,log = None):
             if request.method == 'GET':
                 if authenticate(user,request):
-                    response = return_logs_for_device(user,device)
+                    response = return_logs_for_user(user)
                     return jsonify(response),200
                 else:
                     return jsonify({'status':'You are not authorized to view this content'}),200

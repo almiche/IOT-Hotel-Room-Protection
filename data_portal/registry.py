@@ -85,22 +85,10 @@ def return_devices_for_user(owner_id):
     return device_list
 
 @db_session
-def return_logs_for_device(owner_id,device_id=None):
-    if device_id is not None:
-        log_list = []
-        logs = select(log 
-                        for owner in User
-                        for device in owner.devices
-                        for log in device.logs 
-                        if (owner.username == owner_id and
-                            device.mac == device_id )).sort_by(lambda log: log.id)
-        for log in logs:
-            log_list.append(log.to_dict())
-        return log_list
-    else:
-        device_logs_map = {}
-        for device in User[owner_id].devices:
-            device_logs_map[device.mac] = [log.to_dict() for log in device.logs]
-        return device_logs_map
+def return_logs_for_user(owner_id):
+    device_logs_map = {}
+    for device in User[owner_id].devices:
+        device_logs_map[device.mac] = [log.to_dict() for log in device.logs.sort_by(lambda log: log.id)]
+    return device_logs_map
 
 db.generate_mapping(create_tables=True)
