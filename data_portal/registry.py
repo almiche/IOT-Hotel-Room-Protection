@@ -1,6 +1,7 @@
 from pony.orm import *
 import json
 import os
+import pry
 
 try:  
    username = os.environ.get("DB_USER")
@@ -78,7 +79,7 @@ def return_user(user):
 @db_session
 def return_devices_for_user(owner_id):
     device_list = []
-    devices = User[owner_id].devices
+    devices = User[owner_id].devices.sort_by(lambda device: device.mac)
     for device in devices:
         device_list.append(device.to_dict())
     return device_list
@@ -92,7 +93,7 @@ def return_logs_for_device(owner_id,device_id=None):
                         for device in owner.devices
                         for log in device.logs 
                         if (owner.username == owner_id and
-                            device.mac == device_id ))
+                            device.mac == device_id )).sort_by(lambda log: log.id)
         for log in logs:
             log_list.append(log.to_dict())
         return log_list
