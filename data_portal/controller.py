@@ -33,36 +33,32 @@ def authenticate(user,request):
     else:
         return False
 
-def generate_new_token(user):
-        api_token = secrets.token_hex(nbytes=120)
-        if check_login(user):
-            add_new_api_token(user,api_token)
-            return api_token
-
 def register_routes():
     @app.after_request
     def after_request(response):
         response.headers.add('Access-Control-Allow-Credentials', 'true')
         return response 
 
-    @app.route('/api/v1.0/generate-token',methods=['POST'])
+    @app.route('/api/v1.0/generate-token',methods=['POST']) # Upon login return a new token if one doesnt exists
     def handle_transaction_tokenize():
         if request.method == 'POST':
             user = request.json['user']
-            if not check_login(user):
-                password = request.json.get('password',None)
-                if password:
-                    salt = return_user(user)['salt']
-                    pass_hash = return_user(user)['password_hash']
-                    hash = hashing.hash_value(password, salt=salt)
-                    if pass_hash == hash:
+            password = request.json.get('password',None)
+            if password:
+                salt = return_user(user)['salt']
+                pass_hash = return_user(user)['password_hash']
+                hash = hashing.hash_value(password, salt=salt)
+                if pass_hash == hash:
+                    if check_login(user):
+                        return jsonify({'status':'logged','token':check_login(user),'user':user}),200
+                    else:
                         api_token = secrets.token_hex(nbytes=120)
                         add_new_api_token(user,api_token)
                         return jsonify({'status':'logged','token':api_token,'user':user}),200
-                    else:
-                        return jsonify({'status':'invalid'}),400
                 else:
-                        return jsonify({'status':'No password provided'}),400
+                    return jsonify({'status':'invalid'}),400
+            else:
+                return jsonify({'status':'No password provided'}),400
 
     @app.route('/api/v1.0/signout',methods=['POST'])
     def handle_sign_out():
