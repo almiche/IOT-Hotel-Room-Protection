@@ -5,10 +5,15 @@ $(document).ready(function() {
 
   if(!Cookies.get('user')){
       stateSwitch('OUT');
+      $('#content').css('display','none');
+    }
+    else if (Cookies.get('user')){
+      stateSwitch('IN');
+      $('#content').css('display','flex');
   }
-  else if (Cookies.get('user')){
-    stateSwitch('IN');
-  }
+
+  getDevices();
+  getLogs();
 
   function stateSwitch(state){
     switch(state){
@@ -18,7 +23,9 @@ $(document).ready(function() {
         $(".signup").css('display','none');
         $("#signup,#signin").css('display',"none")
         $('#deviceSubmenuContainer').css('display','block');
+        $('#deviceSubmenu').css('display','block')
         $('#logout').css('display','block')
+        getDevices();
       break;
       case 'OUT':
         $('.signup').css('display','none');
@@ -77,8 +84,8 @@ $(document).ready(function() {
         response = JSON.parse(this.responseText);
         Cookies.set('user', response.user);
         Cookies.set('token', response.token);
-        getDevices();
         stateSwitch('IN');
+        $('#content').css('display','flex');
       }
     });
   
@@ -105,6 +112,7 @@ $(document).ready(function() {
         Cookies.remove('user');
         Cookies.remove('token');
         stateSwitch('OUT');
+        $('#content').css('display','none');
       }
     });
   
@@ -174,6 +182,21 @@ $(document).ready(function() {
     myChart.options.title.text = `Acceleration data ${log.device} at ${log.timestamp}`
     myChart.update();
     $("#totalAlerts").text(logs[currentDevice].length);
+    rating = Math.max.apply(null,dump)/Math.min.apply(null,dump)
+    switch(rating){
+      case rating > 1.0:
+        $("#rating").text(' 🤙🏂😱🤡 That was nectar!');
+      break;
+      case rating > 3.0:
+        $("#rating").text('Ouf that was fire! \n 🚔🔥');
+      break;
+      case rating < 1.0:
+        $("#rating").text('Sneaky! \n 👺🤫');
+      break;
+      default:
+        console.log('default');
+      break;
+    }
   }
 
   function refreshAccordion() {
@@ -203,9 +226,6 @@ $(document).ready(function() {
       });
     }
   }
-
-  getDevices();
-  getLogs();
 
   var chart = document.getElementById("graph");
   var myChart = new Chart(chart, {
