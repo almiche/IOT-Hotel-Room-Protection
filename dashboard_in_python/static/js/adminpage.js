@@ -62,6 +62,16 @@ $(document).ready(function() {
         logs = JSON.parse(this.responseText);
         if (currentDevice){
           updateCards(logs[currentDevice][0]);
+          $(".history .entries").empty();
+          logs[currentDevice].forEach(function(log) {
+            $(
+              ".history .entries"
+            ).append(`<button class="accordion" name="${log.id}" style="background-color:white">${log.timestamp}</button>
+                          <div class="panel">
+                              <p>${log.log_dump}</p>
+                          </div>`);
+          });
+          refreshAccordion();
         }
       }
     });
